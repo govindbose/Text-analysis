@@ -1,109 +1,86 @@
-import matplotlib.pyplot as plt; plt.rcdefaults()
+import matplotlib
+matplotlib.use('Agg')
+## For use in WSL or where a GUI is not available
 import numpy as np
 import matplotlib.pyplot as plt
 import re
 
-emo={}
-
 def texan(x):
-    f  = file(x + ".txt", 'r')
-    fnu = file(x + "_new.txt",'w')
+    f  = file(x + "_text.txt", 'r')
     l = 0
     w = 0
     c = 0
-    e = 0
     for line in f:
         l+=1
-        line=line.strip().lower()
-        x = re.sub(ur'[\U0001f600-\U0001f650]|[\U0001f300-\U0001f5ff]|[\U0001f680-\U0001f6ff]|\:p|\:\)|\:\(|\:\\|\:\/|xd|xp|_|\*',' ',line.decode('utf-8'),flags=re.UNICODE)
-        if x:
-            #print x.encode('utf-8')
-            fnu.write(x.encode('utf-8')+'\n')
         line=re.split(' +|\.+|,+|-+',line)
         for i in line:
             if len(i)==0:
                 continue
             w+=1
             c+=len(i)
-    return (l,w,c,e)
+    return (l,w,c)
 
 
 
-
-
-print "enter names of ppl"
-a = []
+names = []
 linecount = []
 charcount = []
 wordcount = []
 wpl = []
 emoj=[]
+
+print "Enter contact names of chat members:"
 while True:
     x=raw_input()
     if x=='':
         break
-    a.append(x)
+    names.append(x)
 
-for i in a:
+for i in names:
     x = texan(i)
     linecount.append(x[0])
     wordcount.append(x[1])
     charcount.append(x[2])
-    emoj.append(x[3])
-for i in range(len(a)):
+for i in range(len(names)):
     wpl.append(wordcount[i]*1.0/(linecount[i]*1.0))
 
-print a
-#print linecount
-#print wordcount
+print names
+print linecount
+print wordcount
 print charcount
-#print wpl
-print emoj
+print wpl
 
 
 
-tot_emoj=[]
-tot_emoj_no=[]
-for i in emo:
-    if emo[i]>10:
-        tot_emoj.append(i)
-        tot_emoj_no.append(emo[i])
-        #print i.encode('utf-8') , emo[i]
-
-
-plt.clf()
-
-objects =tuple(a)
+objects =tuple(names)
 y_pos = np.arange(len(objects))
 plt.bar(y_pos, linecount, align='center', alpha=0.5)
 plt.xticks(y_pos, objects)
 plt.title('Number of lines')
 plt.show()
+plt.savefig('data_lines.png')
+plt.clf()
+
+
 
 plt.bar(y_pos, wordcount, align='center', alpha=0.5)
 plt.xticks(y_pos, objects)
 plt.title('Number of words')
 plt.show()
+plt.savefig('data_words.png')
+plt.clf()
 
 plt.bar(y_pos, charcount, align='center', alpha=0.5)
 plt.xticks(y_pos, objects)
 plt.title('Number of characters')
 plt.show()
+plt.savefig('data_characters.png')
+plt.clf()
 
 plt.bar(y_pos, wpl, align='center', alpha=0.5)
 plt.xticks(y_pos, objects)
 plt.title('Number of words per line(avg)')
+plt.savefig('data_wpl.png')
 plt.show()
 
 
-plt.bar(y_pos, emoj, align='center', alpha=0.5)
-plt.xticks(y_pos, objects)
-plt.title('emojis')
-plt.show()
-
-
-emo_ypos=np.arange(len(tot_emoj))
-plt.bar(emo_ypos, tot_emoj_no , align='center', alpha=0.5)
-plt.xticks(emo_ypos, tuple(tot_emoj))
-plt.title('total emojis')
-plt.show()

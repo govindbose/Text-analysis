@@ -1,13 +1,16 @@
 import re    
 def msg_strip(l):
-    x = re.sub(ur'[\U0001f600-\U0001f650]|[\U0001f300-\U0001f5ff]|[\U0001f680-\U0001f6ff]|\:p|\:\)|\:\(|\:\\|\:\/|xd|xp|_|\*|\.',' ',l.lower().decode('utf-8'),flags=re.UNICODE)
+    l=  l.decode('utf-8').encode('ascii', 'ignore').decode('ascii') 
+    #Removes non ascii characters viz emojis
+    x = re.sub(ur'\:p|\:\)|\:\(|\:\\|\:\/|xd|xp|_|\*|\.',' ',l.lower().decode('utf-8'),flags=re.UNICODE)
+    #Removes text smileys
     print x
     glob_file.write(x.encode('utf-8'))
     return x
     
-s=raw_input()
+s=raw_input("Enter name of chat file:")
 f=file(s,'r')
-glob_file=file('_new_'+s,'w')
+glob_file=file('new_'+s,'w')
 i = f.readlines()
 for x in i:
     msg_strip(x)

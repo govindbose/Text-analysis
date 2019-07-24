@@ -45,7 +45,7 @@ def msg_strip(l,prev):
     glob_file.write(a.text+'\n')
     return a
     
-s=raw_input()
+s=raw_input("Enter name of processed chat file:")
 f=file(s,'r')
 glob_file=file('convo.txt','w')
 
